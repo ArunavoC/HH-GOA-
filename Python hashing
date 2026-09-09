@@ -1,0 +1,25 @@
+import hashlib
+
+def calculate_hash(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+with open("discovered_post.jpg", "rb") as f:
+    image_data = f.read()
+
+content_hash = calculate_hash(image_data)
+
+print("SHA-256:", content_hash)
+
+
+
+
+
+
+def verify_content(original_file, blockchain_hash):
+
+    with open(original_file, "rb") as f:
+        data = f.read()
+
+    current_hash = hashlib.sha256(data).hexdigest()
+
+    return current_hash == blockchain_hash
