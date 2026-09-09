@@ -1,0 +1,49 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract ContentVerifier {
+
+    struct Record {
+        bytes32 contentHash;
+        uint256 timestamp;
+        address uploader;
+    }
+
+    mapping(bytes32 => Record) public records;
+
+    function storeHash(bytes32 _hash) public {
+        records[_hash] = Record(
+            _hash,
+            block.timestamp,
+            msg.sender
+        );
+    }
+
+    function verifyHash(bytes32 _hash)
+        public
+        view
+        returns (bool)
+    {
+        return records[_hash].contentHash == _hash;
+    }
+}Original discovered content
+        ↓
+     SHA-256
+        ↓
+      a83f...91bc
+             │
+             ▼
+Blockchain stored hash
+             │
+        MATCH → VERIFIED
+        DIFFERENT → TAMPEREDPost image/text/metadata
+        ↓
+      SHA-256
+        ↓
+  "a83f...91bc"
+        ↓
+Smart Contract
+        ↓
+transaction
+        ↓
+blockchain
